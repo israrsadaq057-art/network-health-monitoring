@@ -1,86 +1,154 @@
-\# 🏥 Network Health Monitoring System
+# Network Health Monitoring System
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com)
+[![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
+## Overview
 
+**Predict router and access point failures BEFORE they happen.**
 
-\[!\[Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge\&logo=docker\&logoColor=white)](https://docker.com)
+This monitoring system gives you real-time visibility into your network infrastructure and alerts you days before a device fails.
 
-\[!\[Grafana](https://img.shields.io/badge/grafana-%23F46800.svg?style=for-the-badge\&logo=grafana\&logoColor=white)](https://grafana.com)
+| Feature | Description |
+|---------|-------------|
+| Live Dashboards | Real-time metrics for all network devices |
+| Temperature Monitoring | Detect overheating before failure |
+| Memory Trend Analysis | Catch memory leaks early |
+| Interface Error Tracking | Find failing cables and ports |
+| Uptime Monitoring | Detect unexpected reboots |
+| Instant Alerts | Telegram/Slack notifications |
 
-\[!\[Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge\&logo=Prometheus\&logoColor=white)](https://prometheus.io)
+---
 
+A complete monitoring solution for IT infrastructure that predicts router and access point failures BEFORE they happen.
 
+## Features
 
-\## 🎯 What This Project Does
+- Live dashboards for all network devices
+- Temperature monitoring to detect overheating
+- Memory trend analysis to catch memory leaks
+- Interface error tracking for failing cables
+- Uptime monitoring for unexpected reboots
+- Instant alerts via Telegram or Slack
 
+## Quick Start
 
+Prerequisites:
+-Docker Desktop installed
 
-\*\*Predict router and access point failures BEFORE they happen\*\*
+Step 1 - Clone the repository:
+git clone https://github.com/israrsadaq057-art/network-health-monitoring.git
 
-
-
-This monitoring system gives you:
-
-\- 📊 \*\*Live dashboards\*\* of all network devices
-
-\- 🌡️ \*\*Temperature monitoring\*\* (detect overheating before failure)
-
-\- 📈 \*\*Memory trend analysis\*\* (catch memory leaks early)
-
-\- 🔌 \*\*Interface error tracking\*\* (find failing cables/ports)
-
-\- ⏱️ \*\*Uptime monitoring\*\* (detect unexpected reboots)
-
-\- 🚨 \*\*Instant alerts\*\* via Telegram/Slack
-
-
-
-&#x20;
-
-\## 🚀 Quick Start (5 Minutes)
-
-
-
-\### Prerequisites
-
-\- Windows 10/11, Linux, or macOS
-
-\- Docker Desktop installed
-
-
-
-\### One-Command Setup
-
-
-
-```bash
-
-git clone https://github.com/YOUR\_USERNAME/network-health-monitoring.git
-
+Step 2 - Go to the folder:
 cd network-health-monitoring
 
+Step 3 - Start the monitoring stack:
 docker-compose up -d
 
+Step 4 - Open Grafana:
+http://localhost:3000
+Username: admin
+Password: admin
 
+## What You Can Monitor
 
-\### **Then open: http://localhost:3000 (admin/admin)**
+Router:
+- CPU usage
+- Memory usage
+- Temperature
+- Uptime
 
+Access Points:
+- Client count
+- Retry rate
+- Signal strength
 
+Switches:
+- Port errors
+- Bandwidth usage
+- CRC errors
 
-**## Project structure:**
+Servers:
+- Disk space
+- CPU usage
+- RAM usage
+- Running services
 
-**network-health-monitoring/**
+## Failure Indicators to Watch
 
-**├── docker-compose.yml      # Complete stack configuration**
+Temperature above 70 degrees Celsius for 5 minutes - Replace router within 24 hours
+CRC errors above 10 per second - Replace cable immediately
+Memory usage above 85 percent - Restart device
+Uptime resets unexpectedly - Investigate power or logs
+Client count drops by 50 percent - Access point may be failing
 
-**├── prometheus.yml          # Metrics collection config**
+## Alert Rules
 
-**├── alertmanager.yml        # Alert rules**
+Critical Temperature:
+When router temperature exceeds 70 degrees for 5 minutes
+Action: Replace device within 24 hours
 
-**├── dashboards/             # Pre-built Grafana dashboards**
+High CRC Errors:
+When CRC errors exceed 10 per second
+Action: Replace cable first, then test port
 
-**├── scripts/                # Automation scripts**
+Memory Leak Detected:
+When memory increases without reset
+Action: Restart service or device
 
-**└── docs/                   # Detailed documentation**
+Unexpected Reboot:
+When uptime resets unexpectedly
+Action: Check power supply and system logs
 
+## Project Structure
 
+```
+network-health-monitoring/
+├── docker-compose.yml
+├── prometheus.yml
+├── alertmanager.yml
+├── README.md
+├── scripts/
+│   ├── setup-monitoring.ps1
+│   ├── backup-configs.ps1
+│   ├── test-spares.ps1
+│   └── emergency-failover.ps1
+├── dashboards/
+├── docs/
+└── configs/
 
+```
+## Automation Scripts
+
+setup-monitoring.ps1 - One-click setup of entire system
+Run: .\scripts\setup-monitoring.ps1
+
+backup-configs.ps1 - Weekly backup of all configurations
+Run: .\scripts\backup-configs.ps1
+
+test-spares.ps1 - Test spare devices
+Run: .\scripts\test-spares.ps1
+
+emergency-failover.ps1 - One-click router failover
+Run: .\scripts\emergency-failover.ps1
+
+## Success Metrics
+
+Mean Time To Detect: Less than 5 minutes
+Mean Time To Recover: Less than 1 hour
+False Positive Rate: Less than 5 percent
+Devices replaced before failure: 100 percent
+
+## License
+
+MIT License
+
+## Author
+
+Israr Sadaq
+GitHub: israrsadaq057-art
+
+## Support
+
+If this project helped you, please give it a star on GitHub.
