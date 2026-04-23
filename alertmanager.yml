@@ -1,0 +1,133 @@
+groups:
+  - name: router_alerts
+    interval: 30s
+    rules:
+      # ============================================
+      # ROUTER CRITICAL ALERTS
+      # ============================================
+      
+      - alert: RouterHighTemperature
+        expr: snmp_environment_sensor_value{sensor_type="temperature"} > 70
+        for: 5m
+        labels:
+          severity: critical
+          device: router
+        annotations:
+          summary: "Router temperature critical: {{ $value }}°C"
+          description: "Router temperature exceeded 70°C. Device may fail soon. Check cooling immediately."
+          action: "Point fan at router, schedule replacement"
+
+      - alert: RouterHighCPU
+        expr: irate(node_cpu_seconds_total{mode="user"}[5m]) * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+          device: router
+        annotations:
+          summary: "Router CPU high: {{ $value }}%"
+          description: "Router CPU usage above 80% for 10 minutes"
+          action: "Check for unusual traffic, consider upgrade"
+
+      - alert: RouterHighMemory
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 15m
+        labels:
+          severity: critical
+          device: router
+        annotations:
+          summary: "Router memory critical: {{ $value }}%"
+          description: "Router memory usage above 85%. Device may crash soon."
+          action: "Replace router within 24 hours"
+
+      - alert: RouterRebooted
+        expr: changes(node_boot_time_seconds[1d]) > 1
+        for: 0m
+        labels:
+          severity: warning
+          device: router
+        annotations:
+          summary: "Router rebooted"
+          description: "Router restarted {{ $value }} times in last 24 hours"
+          action: "Check power stability, review logs"
+
+      # ============================================
+      # NETWORK INTERFACE ALERTS
+      # ============================================
+      
+      - alert: HighCRCErrors
+        expr: rate(node_network_receive_errs_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          device: network
+        annotations:
+          summary: "CRC errors detected"
+          description: "Interface {{ $labels.device }} has {{ $value }} CRC errors/sec"
+          action: "Replace cable first, then test port"
+
+      - alert: HighPacketLoss
+        expr: irate(node_network_transmit_drop_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: critical
+          device: network
+        annotations:
+          summary: "Packet loss detected"
+          description: "Packet loss rate: {{ $value }}/sec"
+          action: "Check physical connection, replace switch if persists"
+
+      # ============================================
+      # ACCESS POINT ALERTS
+      # ============================================
+      
+      - alert: APClientDrop
+        expr: unifi_client_count < 5 and unifi_client_count offset 1h > 20
+        for: 15m
+        labels:
+          severity: warning
+          device: access_point
+        annotations:
+          summary: "AP client count dropped significantly"
+          description: "AP {{ $labels.ap }} lost {{ $value }} clients in last hour"
+          action: "Check AP power, reboot if necessary"
+
+      - alert: APHighRetryRate
+        expr: unifi_ap_retry_rate > 30
+        for: 10m
+        labels:
+          severity: warning
+          device: access_point
+        annotations:
+          summary: "High WiFi retry rate"
+          description: "AP {{ $labels.ap }} has {{ $value }}% retry rate"
+          action: "Check for interference, move channels"
+
+      # ============================================
+      # DISK SPACE ALERTS (Your monitoring PC)
+      # ============================================
+      
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+          device: monitoring
+        annotations:
+          summary: "Disk space critical: {{ $value }}% free"
+          description: "C: drive has less than 10% free space"
+          action: "Run Disk Cleanup, delete old logs"
+
+      # ============================================
+      # INTERNET CONNECTIVITY ALERTS
+      # ============================================
+      
+      - alert: InternetDown
+        expr: probe_success{job="speedtest"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          device: internet
+        annotations:
+          summary: "Internet connection lost"
+          description: "Cannot reach external targets"
+          action: "Check ISP modem, router, contact ISP if needed"

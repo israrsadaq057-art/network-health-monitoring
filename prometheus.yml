@@ -1,0 +1,64 @@
+global:
+  scrape_interval: 30s      # How often to check
+  evaluation_interval: 30s  # How often to evaluate alerts
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+# Alert rules (loaded from separate file)
+rule_files:
+  - "alertmanager.yml"
+
+# Scrape configuration
+scrape_configs:
+  # 1. Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 2. Your computer (CPU, RAM, Disk)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # 3. Docker containers
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # 4. YOUR ROUTER - REPLACE with your router's IP
+  - job_name: 'router'
+    static_configs:
+      - targets:
+        - '192.168.1.1'  # <<< CHANGE THIS TO YOUR ROUTER IP
+    metrics_path: /snmp
+    params:
+      module: [if_mib]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: snmp-exporter:9116
+
+  # 5. YOUR ACCESS POINTS - Add each one
+  - job_name: 'access_points'
+    static_configs:
+      - targets:
+        - '192.168.1.10'   # AP 1 IP
+        - '192.168.1.11'   # AP 2 IP
+        - '192.168.1.12'   # AP 3 IP
+    metrics_path: /snmp
+    params:
+      module: [if_mib]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: snmp-exporter:9116
